@@ -31,9 +31,4 @@ export default {
 			current: currentTotal,
 		};
 	},
-	[Mutations.SAVE_COOKIE_DATA] (state, cookie) {
-		state.level = cookie.level;
-		state.xp = cookie.xp;
-		state.completedChallenges = cookie.completedChallenges;
-	},
 } as MutationsInterface;

@@ -1,6 +1,6 @@
 import { State, Mutations, Getters, MutationsInterface } from './types';
 
-const MINUTES = 25;
+const MINUTES = 0.1;
 
 export const state = (): State => ({
 	time: MINUTES * 60,

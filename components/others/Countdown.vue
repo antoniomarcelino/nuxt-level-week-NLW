@@ -8,9 +8,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState, mapGetters } from 'vuex';
-// import { Mutations } from '~/store/Countdown/types';
+import { mapMutations, mapState, mapGetters } from 'vuex';
+import { Mutations } from '~/store/Countdown/types';
 import CountdownDigits from '~/components/atoms/CountdownDigits.vue';
+
+let TIMEOUT_REF: ReturnType<typeof setTimeout>;
 
 export default Vue.extend({
 	computed: {
@@ -18,6 +20,35 @@ export default Vue.extend({
 		...mapGetters('Countdown', ['minutes', 'seconds']),
 	},
 	methods: {
+		...mapMutations('Countdown', {
+			setTime: Mutations.SET_TIME,
+			resetTime: Mutations.RESET_TIME,
+		}),
+		runCountdown (flag: boolean) {
+			if (this.isActive && flag) {
+				TIMEOUT_REF = setTimeout(() => {
+					this.setTime(this.time - 1);
+				}, 1000);
+			} else {
+				clearTimeout(TIMEOUT_REF);
+			}
+		},
+	},
+	watch: {
+		isActive (newValue: boolean) {
+			this.runCountdown(newValue);
+
+			if (!newValue) {
+				this.resetTime();
+			}
+		},
+		time (newValue: number) {
+			if (newValue > 0) {
+				this.runCountdown(true);
+			} else {
+				this.$emit('completed');
+			}
+		},
 	},
 	components: {
 		CountdownDigits,
